@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Delete Account — Personal Grade Tracker</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; line-height:1.6; padding:2rem; color:#111 }
+    .container { max-width:720px; margin:0 auto }
+    h1 { margin-bottom:.25rem }
+    p.lead { color:#333; margin-top:0 }
+    .notice { background:#fff8e1; border:1px solid #ffe08a; padding:1rem; margin:1rem 0; border-radius:6px }
+    .danger { background:#fff0f0; border:1px solid #ffb3b3; padding:1rem; margin:1rem 0; border-radius:6px }
+    form { margin-top:1rem }
+    label { display:flex; gap:.5rem; align-items:center }
+    button { background:#b91c1c; color:white; border:0; padding:.6rem 1rem; border-radius:6px; font-weight:600 }
+    button:disabled { opacity:.5 }
+    a { color:#0366d6 }
+    footer { margin-top:2rem; color:#555; font-size:.95rem }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <h1>Delete your account</h1>
+    <p class="lead">This page lets you permanently delete your Personal Grade Tracker account and all associated data.</p>
+
+    <section class="notice" aria-live="polite">
+      <strong>What happens when you delete your account</strong>
+      <ul>
+        <li>Your account record and profile will be removed.</li>
+        <li>Your saved grade data and settings will be permanently deleted and cannot be recovered.</li>
+        <li>This action cannot be undone. You will lose access immediately.</li>
+      </ul>
+    </section>
+
+    <section class="danger">
+      <strong>Before you proceed</strong>
+      <p>If you have any data you want to keep, export or copy it now. If you're unsure, you can contact support first.</p>
+    </section>
+
+    <!-- The form action is a placeholder. Replace with your server endpoint. -->
+    <form id="deleteForm" method="post" action="/delete-account">
+      <p>
+        <label>
+          <input type="checkbox" id="confirmCheckbox" aria-describedby="confirmHelp">
+          <span>I understand that deleting my account is permanent and cannot be undone.</span>
+        </label>
+      </p>
+      <p id="confirmHelp">Check the box to enable the Delete button.</p>
+
+      <p>
+        <button id="deleteBtn" type="submit" disabled>Delete my account</button>
+      </p>
+
+      <p style="font-size:.95rem;color:#444">If this is a mistake, you can <a href="privacy_policy.html">review the privacy policy</a> or return to the site.</p>
+    </form>
+
+    <footer>
+      <small>Note: This page performs client-side confirmation only. Implement server-side authentication and verification before processing account deletion in production.</small>
+    </footer>
+  </main>
+
+  <script>
+    // Minimal client-side safety: require the checkbox and show a final confirm dialog.
+    const checkbox = document.getElementById('confirmCheckbox');
+    const deleteBtn = document.getElementById('deleteBtn');
+    const form = document.getElementById('deleteForm');
+
+    checkbox.addEventListener('change', () => {
+      deleteBtn.disabled = !checkbox.checked;
+    });
+
+    form.addEventListener('submit', (e) => {
+      // Prevent accidental submission in this static repo.
+      e.preventDefault();
+
+      if (!checkbox.checked) return;
+
+      const ok = confirm('Are you sure you want to permanently delete your account? This cannot be undone.');
+      if (!ok) return;
+
+      // In a real app, submit to your backend here. We'll show a temporary message instead.
+      deleteBtn.disabled = true;
+      deleteBtn.textContent = 'Deleting...';
+
+      // Simulate an async request (replace with fetch to your API in production).
+      setTimeout(() => {
+        document.body.innerHTML = `\n          <main class="container">\n            <h1>Account deleted</h1>\n            <p>Your account deletion request has been received. All local traces in this demo are removed from the client.\n            In a real deployment the server would remove your account and data.</p>\n            <p><a href="privacy_policy.html">Privacy policy</a></p>\n          </main>`;
+      }, 700);
+    });
+  </script>
+</body>
+</html>
